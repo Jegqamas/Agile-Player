@@ -2,7 +2,7 @@
 // An Audio player with downsampler, upsampler and bit-converter
 // written in C#.
 // 
-// Copyright © Alaa Ibrahim Hadid 2022
+// Copyright © Alaa Ibrahim Hadid 2022 - 2025
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
-// Author email: mailto:alaahadidfreeware@gmail.com
+// Author email: mailto:alahadid@gmail.com
 //
 
 namespace APlayer.Core

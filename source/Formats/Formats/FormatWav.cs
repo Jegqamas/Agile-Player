@@ -2,7 +2,7 @@
 // An Audio player with downsampler, upsampler and bit-converter
 // written in C#.
 // 
-// Copyright © Alaa Ibrahim Hadid 2022
+// Copyright © Alaa Ibrahim Hadid 2022 - 2025
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
-// Author email: mailto:alaahadidfreeware@gmail.com
+// Author email: mailto:alahadid@gmail.com
 //
 using System;
 using System.IO;
@@ -30,8 +30,9 @@ namespace APlayer.Formats
     [MediaFormatInfo("WAVE", "wav", new string[] { ".wav", ".WAV" }, MediaFormatType.Audio)]
     public class FormatWav : IMediaFormat
     {
-        MemoryStream read_stream;
+        Stream read_stream;
         protected long sample_pointer;
+        protected long current_sample_position;
 
         /// <summary>
         /// GEt audio format. 1 is PCM
@@ -117,15 +118,15 @@ namespace APlayer.Formats
                 return;
             }
 
-            Stream stream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+            read_stream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
 
-            if (!stream.CanRead)
+            if (!read_stream.CanRead)
             {
                 Trace.WriteLine("ERROR: file cannot be read at " + filePath, "WAV");
                 Dispose();
                 return;
             }
-            if (stream.Length < 50)
+            if (read_stream.Length < 50)
             {
                 Trace.WriteLine("ERROR: cannot read wave file, file is too small to be an wave file. " + filePath, "WAV");
                 Dispose();
@@ -134,7 +135,7 @@ namespace APlayer.Formats
             // Start reading !!
             // 1 Read RIFF
             byte[] readData = new byte[4];
-            stream.Read(readData, 0, 4);
+            read_stream.Read(readData, 0, 4);
             if (ASCIIEncoding.ASCII.GetString(readData) != "RIFF")
             {
                 Trace.WriteLine("ERROR: cannot read wave file, RIFF check failed.", "WAV");
@@ -143,12 +144,12 @@ namespace APlayer.Formats
             }
             // 2 Read ChunkSize
             readData = new byte[4];
-            stream.Read(readData, 0, 4);
+            read_stream.Read(readData, 0, 4);
             int ChunkSize = IntFromBytes(readData, true);
 
             // 3 Read Format
             readData = new byte[4];
-            stream.Read(readData, 0, 4);
+            read_stream.Read(readData, 0, 4);
             if (ASCIIEncoding.ASCII.GetString(readData) != "WAVE")
             {
                 Trace.WriteLine("ERROR: cannot read wave file, WAVE check failed.", "WAV");
@@ -158,70 +159,70 @@ namespace APlayer.Formats
 
             bool found = false;
             // Read the rest of the chuncks.
-            while (stream.Position < stream.Length)
+            while (read_stream.Position < read_stream.Length)
             {
                 // Read SubchunkID
                 readData = new byte[4];
-                stream.Read(readData, 0, 4);
+                read_stream.Read(readData, 0, 4);
                 string id = ASCIIEncoding.ASCII.GetString(readData);
                 if (id == "fmt ")
                 {
                     // This is it, the fmt chunk
                     // Read Subchunk1Size
                     readData = new byte[4];
-                    stream.Read(readData, 0, 4);
+                    read_stream.Read(readData, 0, 4);
                     int Subchunk1Size = IntFromBytes(readData, true);
 
                     // Read AudioFormat
                     readData = new byte[2];
-                    stream.Read(readData, 0, 2);
+                    read_stream.Read(readData, 0, 2);
                     AudioFormat = IntFromBytes(readData, true);
                     Subchunk1Size -= 2;
                     // Read NumChannels
                     readData = new byte[2];
-                    stream.Read(readData, 0, 2);
+                    read_stream.Read(readData, 0, 2);
                     ChannelsNumber = IntFromBytes(readData, true);
                     Subchunk1Size -= 2;
                     // Read SampleRate
                     readData = new byte[4];
-                    stream.Read(readData, 0, 4);
+                    read_stream.Read(readData, 0, 4);
                     Frequency = IntFromBytes(readData, true);
                     Subchunk1Size -= 4;
                     // Read ByteRate
                     readData = new byte[4];
-                    stream.Read(readData, 0, 4);
+                    read_stream.Read(readData, 0, 4);
                     DataRate = IntFromBytes(readData, true);
                     Subchunk1Size -= 4;
                     // Read BlockAlign
                     readData = new byte[2];
-                    stream.Read(readData, 0, 2);
+                    read_stream.Read(readData, 0, 2);
                     BlockAlign = IntFromBytes(readData, true);
                     Subchunk1Size -= 2;
                     // Read BitsPerSample
                     readData = new byte[2];
-                    stream.Read(readData, 0, 2);
+                    read_stream.Read(readData, 0, 2);
                     BitsPerSample = IntFromBytes(readData, true);
                     Subchunk1Size -= 2;
 
                     // Read dummy
                     readData = new byte[Subchunk1Size];
-                    stream.Read(readData, 0, Subchunk1Size);
+                    read_stream.Read(readData, 0, Subchunk1Size);
                 }
                 else if (id == "data")
                 {
                     // 13 Read Subchunk2Size
                     readData = new byte[4];
-                    stream.Read(readData, 0, 4);
+                    read_stream.Read(readData, 0, 4);
                     DataSize = IntFromBytes(readData, true);
                     CurrentFilePath = filePath;
                     FileLoaded = true;
                     Length = (double)DataSize / (double)DataRate;
                     found = true;
 
-                    sample_pointer = 0;
+                    sample_pointer = read_stream.Position;
                     // Copy into the read stream
-                    read_stream = new MemoryStream();
-                    CopyStream(stream, read_stream);
+                    // read_stream = new MemoryStream();
+                    // CopyStream(stream, read_stream);
 
                     SetPosition(0);
 
@@ -231,10 +232,10 @@ namespace APlayer.Formats
                 {
                     // Read and skip this chunck
                     readData = new byte[4];
-                    stream.Read(readData, 0, 4);
+                    read_stream.Read(readData, 0, 4);
                     int size = IntFromBytes(readData, true);
 
-                    stream.Seek(stream.Position + size, SeekOrigin.Begin);
+                    read_stream.Seek(read_stream.Position + size, SeekOrigin.Begin);
                 }
             }
 
@@ -247,21 +248,26 @@ namespace APlayer.Formats
 
         public override double GetPosition()
         {
-            return GetTimeAtSamplePoint(sample_pointer);
+            return GetTimeAtSamplePoint(current_sample_position);
         }
         public override void SetPosition(double seconds)
         {
-            sample_pointer = GetSamplePoint(seconds);
-            read_stream.Seek(sample_pointer, SeekOrigin.Begin);
+            current_sample_position = sample_pointer + GetSamplePoint(seconds);
+            read_stream.Seek(current_sample_position, SeekOrigin.Begin);
         }
         public override void GetNextSample(ref int[] sample, out bool success)
         {
             byte[] sampleBlock = new byte[BlockAlign];
-            if (sample_pointer + (BlockAlign - 1) < read_stream.Length)
+            if (current_sample_position + (BlockAlign - 1) < read_stream.Length)
             {
-                read_stream.Read(sampleBlock, 0, BlockAlign);
-                sample_pointer += BlockAlign;
-                success = true;
+                if (current_sample_position - sample_pointer < DataSize)
+                {
+                    read_stream.Read(sampleBlock, 0, BlockAlign);
+                    current_sample_position += BlockAlign;
+                    success = true;
+                }
+                else
+                { success = false; }
             }
             else
             {
@@ -352,11 +358,11 @@ namespace APlayer.Formats
         /// <summary>
         /// Get time at specific point. 
         /// </summary>
-        /// <param name="sample_point">The sample point in the data, without DataPointer</param>
+        /// <param name="_point">The sample point in the data, without DataPointer</param>
         /// <returns></returns>
-        double GetTimeAtSamplePoint(long sample_point)
+        double GetTimeAtSamplePoint(long _point)
         {
-            double sec = (sample_point * (Length * 1000)) / DataSize;
+            double sec = (_point * (Length * 1000)) / DataSize;
 
             return (sec / 1000);
         }

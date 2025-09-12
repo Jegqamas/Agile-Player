@@ -2,7 +2,7 @@
 // An Audio player with downsampler, upsampler and bit-converter
 // written in C#.
 // 
-// Copyright © Alaa Ibrahim Hadid 2022
+// Copyright © Alaa Ibrahim Hadid 2022 - 2025
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
-// Author email: mailto:alaahadidfreeware@gmail.com
+// Author email: mailto:alahadid@gmail.com
 //
 using System;
 using System.Threading;
@@ -124,11 +124,7 @@ namespace APlayer.Core
             cps_clks_av += cps_time_frame_time;
             cps_clks++;
 
-            if (audio_target_bit_per_sample != 16)
-                for (int i = 0; i < audio_channels_number; i++)
-                {
-                    audio_last_target_sample[i] = 0;
-                }
+            //UpdateFrequencyPoints();
 
             // Clock speed control
             cps_time_token = GetTime() - cps_time_start;

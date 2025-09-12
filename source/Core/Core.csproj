@@ -54,6 +54,7 @@
   <ItemGroup>
     <Compile Include="Attributes\MediaFormatInfoAttribute.cs" />
     <Compile Include="FormatsManager.cs" />
+    <Compile Include="Others\FrequencyPoint.cs" />
     <Compile Include="Others\Delegates.cs" />
     <Compile Include="Interfaces\IAudioRenderer.cs" />
     <Compile Include="Interfaces\IMediaFormat.cs" />

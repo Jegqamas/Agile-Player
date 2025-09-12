@@ -2,7 +2,7 @@
 // An Audio player with downsampler, upsampler and bit-converter
 // written in C#.
 // 
-// Copyright © Alaa Ibrahim Hadid 2022
+// Copyright © Alaa Ibrahim Hadid 2022 - 2025
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
-// Author email: mailto:alaahadidfreeware@gmail.com
+// Author email: mailto:alahadid@gmail.com
 //
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -31,7 +31,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Core")]
-[assembly: AssemblyCopyright("Copyright © Alaa Ibrahim Hadid 2022")]
+[assembly: AssemblyCopyright("Copyright © Alaa Ibrahim Hadid 2022 - 2025")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -53,5 +53,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyVersion("1.1.*")]
+[assembly: AssemblyFileVersion("1.1.0.0")]

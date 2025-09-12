@@ -2,7 +2,7 @@
 // An Audio player with downsampler, upsampler and bit-converter
 // written in C#.
 // 
-// Copyright © Alaa Ibrahim Hadid 2022
+// Copyright © Alaa Ibrahim Hadid 2022 - 2025
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
-// Author email: mailto:alaahadidfreeware@gmail.com
+// Author email: mailto:alahadid@gmail.com
 //
 namespace APlayer.Core
 {
@@ -33,20 +33,16 @@ namespace APlayer.Core
         public int Audio_Wave_Fix_Mode = 0;// 0 disabled, 1 wave fix shift mode
         public int Audio_Volume = 86;// 0 to 100 %
 
-        public int Audio_RenderBufferInKB = 15;
-        public int CPS_TargetCPS = 47;
-
-        public bool AutoSwitchTargetSettingsToMatchInput = false;
-
         public override void LoadSettings()
         {
             base.LoadSettings();
-
-            if (CPS_TargetCPS <= 0 || CPS_TargetCPS > 64)
-                CPS_TargetCPS = 47;
-
-            if (Audio_RenderBufferInKB < 7 || Audio_RenderBufferInKB > 43)
-                Audio_RenderBufferInKB = 15;
+            // Wired settings
+            Audio_TargetFrequency = 44100;
+            Audio_TargetAudioChannels = 2;
+            Audio_TargetBitsPerSample = 16;
+            Audio_DB_Fix_Enabled = false;// Disabled by default
+            Audio_Wave_Fix_Mode = 0;// 0 disabled, 1 wave fix shift mode
+            Audio_Volume = 100;// 0 to 100 %
         }
     }
 }

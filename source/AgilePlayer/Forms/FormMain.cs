@@ -2,7 +2,7 @@
 // An Audio player with downsampler, upsampler and bit-converter
 // written in C#.
 // 
-// Copyright © Alaa Ibrahim Hadid 2022
+// Copyright © Alaa Ibrahim Hadid 2022 - 2025
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
-// Author email: mailto:alaahadidfreeware@gmail.com
+// Author email: mailto:alahadid@gmail.com
 //
 using System;
 using System.Collections.Generic;
@@ -62,7 +62,6 @@ namespace APlayer
         }
 
         private MediaBar mediaBar1;
-        private DBMeterControl dbmeter;
         private UserControlFilesBrowser files_browser;
         private double old_vol = 0;
         private Color indicater_active = Color.LightSteelBlue;
@@ -81,13 +80,13 @@ namespace APlayer
             mediaBar1.TimeChangeRequest += MediaBar1_TimeChangeRequest;
 
             // DB meter
-            dbmeter = new DBMeterControl();
-            dbmeter.BackColor = Color.LightSlateGray;
-            panel_db_meter.Controls.Add(dbmeter);
-            dbmeter.Dock = DockStyle.Fill;
-            dbmeter.BringToFront();
+            //dbmeter = new DBMeterControl();
+            //dbmeter.BackColor = Color.LightSlateGray;
+            //panel_db_meter.Controls.Add(dbmeter);
+            //dbmeter.Dock = DockStyle.Fill;
+            //dbmeter.BringToFront();
 
-            toolTip1.SetToolTip(dbmeter, "Left-Mouse-Click: Toggle Texts \n\nRight-Mouse-Click: Toggle Lines\n\nMiddle-Mouse-Click: Toggle Surrounding");
+
             // Info mtc
             /*mtc_info = new ManagedTabControl();
            mtc_info.DrawStyle = MTCDrawStyle.Flat;
@@ -134,7 +133,9 @@ namespace APlayer
             groupBox_main.Controls.Add(files_browser);
             files_browser.Dock = DockStyle.Fill;
             files_browser.BringToFront();
-            groupBox_main.Text = "List";
+
+            // specturm analyzer
+            spectrumAnalyzer1.SetFrequencies(new double[] { 60, 120, 200, 260, 440, 660, 990, 1200, 1600, 2400, 3900, 6000, 8000, 10000, 12000, 14000 });
         }
 
         private void LoadRenderers()
@@ -170,39 +171,7 @@ namespace APlayer
         }
         private void UpdateDBMeter()
         {
-            if (APCore.ON && !APCore.PAUSED)
-            {
-                if (Program.AppSettings.DBMeterFromSource)
-                {
-                    if (dbmeter.IsStereo)
-                    {
-                        // From source
-                        dbmeter.SetValues(APCore.audio_last_source_sample[0], APCore.audio_last_source_sample[1], APCore.CurrentMediaFormat.BitsPerSample);
-                    }
-                    else
-                    {
-                        // From source
-                        dbmeter.SetValues(APCore.audio_last_source_sample[0], APCore.audio_last_source_sample[0], APCore.CurrentMediaFormat.BitsPerSample);
-                    }
-                }
-                else
-                {
-                    if (dbmeter.IsStereo)
-                    {
-                        // From target
-                        dbmeter.SetValues(APCore.audio_last_target_sample[0], APCore.audio_last_target_sample[1], APMain.CoreSettings.Audio_TargetBitsPerSample);
-                    }
-                    else
-                    {
-                        // From target
-                        dbmeter.SetValues(APCore.audio_last_target_sample[0], APCore.audio_last_target_sample[0], APMain.CoreSettings.Audio_TargetBitsPerSample);
-                    }
-                }
-            }
-            else
-            {
-                dbmeter.SetValues(0, 0, 16);
-            }
+            spectrumAnalyzer1.Invalidate();
         }
         private bool OpenDragedArgs(string[] args)
         {
@@ -247,7 +216,6 @@ namespace APlayer
 
         private void LoadSettings()
         {
-            dbmeter.LoadSettings();
             this.Location = new Point(Program.AppSettings.Win_Location_X, Program.AppSettings.Win_Location_Y);
             // this.Size = new Size(Program.AppSettings.Win_Size_W, Program.AppSettings.Win_Size_H);
 
@@ -260,14 +228,9 @@ namespace APlayer
             mediaBar1.MediaLineColor = Color.FromArgb(Program.AppSettings.MediaMediaLineColor);
             mediaBar1.ToolTipColor = Color.FromArgb(Program.AppSettings.MediaToolTipColor);
             mediaBar1.ToolTipTextColor = Color.FromArgb(Program.AppSettings.MediaToolTipTextColor);
-
-            trackBar_volume.Value = APMain.CoreSettings.Audio_Volume;
-
-            toolTip1.SetToolTip(trackBar_volume, "Volume = " + trackBar_volume.Value.ToString() + " %" + "\n(F11 Volume Up, F10 Volume Down)");
         }
         private void SaveSettings()
         {
-            dbmeter.SaveSettings();
             Program.AppSettings.Win_Location_X = this.Location.X;
             Program.AppSettings.Win_Location_Y = this.Location.Y;
             Program.AppSettings.Win_Size_W = this.Size.Width;
@@ -287,7 +250,6 @@ namespace APlayer
             // WE MUST FILL SHORTCUTS BEFORE INITIALIZE
             // Main
             shortcuts_manager.Shortcuts.Add(new ShortcutItem("F1", SC_Help));
-            shortcuts_manager.Shortcuts.Add(new ShortcutItem("F2", SC_Website));
             shortcuts_manager.Shortcuts.Add(new ShortcutItem("F3", SC_About));
             shortcuts_manager.Shortcuts.Add(new ShortcutItem("LeftAlt+F4", SC_Exit));
             shortcuts_manager.Shortcuts.Add(new ShortcutItem("F12", SC_ShowSettings));
@@ -299,22 +261,14 @@ namespace APlayer
             shortcuts_manager.Shortcuts.Add(new ShortcutItem("F6", SC_Next));
             shortcuts_manager.Shortcuts.Add(new ShortcutItem("F8", SC_Record));
             shortcuts_manager.Shortcuts.Add(new ShortcutItem("F9", SC_ToggleMute));
-            shortcuts_manager.Shortcuts.Add(new ShortcutItem("F10", SC_VolumeDown));
-            shortcuts_manager.Shortcuts.Add(new ShortcutItem("F11", SC_VolumeUp));
 
             // Open - Save
             shortcuts_manager.Shortcuts.Add(new ShortcutItem("LeftControl+O", SC_OpenFile));
+            shortcuts_manager.Shortcuts.Add(new ShortcutItem("LeftControl+A", SC_AddFile));
             shortcuts_manager.Shortcuts.Add(new ShortcutItem("LeftControl+F", SC_OpenFolder));
-            shortcuts_manager.Shortcuts.Add(new ShortcutItem("LeftControl+LeftShift+F", SC_OpenFolderWithSub));
+            shortcuts_manager.Shortcuts.Add(new ShortcutItem("LeftControl+D", SC_OpenFolderWithSub));
             shortcuts_manager.Shortcuts.Add(new ShortcutItem("LeftControl+L", SC_OpenList));
             shortcuts_manager.Shortcuts.Add(new ShortcutItem("LeftControl+S", SC_SaveList));
-
-            // Settings
-            shortcuts_manager.Shortcuts.Add(new ShortcutItem("LeftControl+D", SC_ToggleDBFix));
-            shortcuts_manager.Shortcuts.Add(new ShortcutItem("LeftControl+W", SC_ToggleWaveShift));
-            shortcuts_manager.Shortcuts.Add(new ShortcutItem("LeftControl+C", SC_ToggleChannels));
-            shortcuts_manager.Shortcuts.Add(new ShortcutItem("LeftControl+B", SC_ToggleBits));
-            shortcuts_manager.Shortcuts.Add(new ShortcutItem("LeftControl+Q", SC_ToggleFreq));
 
             // Edit
             shortcuts_manager.Shortcuts.Add(new ShortcutItem("LeftControl+A", SC_SelectAll));
@@ -331,49 +285,14 @@ namespace APlayer
         }
         private void UpdateIndicaters()
         {
-            label_bits_converting.BackColor = APCore.audio_bp_bits_per_sample_converting_needed ? indicater_active : SystemColors.Control;
-            label_downsampling.BackColor = (APCore.audio_sampling_mode == SamplingMode.Downsampling) ? indicater_active : SystemColors.Control;
-            label_Normal.BackColor = (APCore.audio_sampling_mode == SamplingMode.None) ? indicater_active : SystemColors.Control;
-            label_playing.BackColor = APCore.PAUSED ? SystemColors.Control : indicater_active;
-            label_Upsampling.BackColor = (APCore.audio_sampling_mode == SamplingMode.Upsampling) ? indicater_active : SystemColors.Control;
-
             //recordieConvertToolStripMenuItem.Enabled = button_record.Enabled = APCore.audio_bp_bits_per_sample_converting_needed || (APCore.audio_sampling_mode != SamplingMode.None);
         }
         private void UpdateSwitches()
         {
-            radioButton_8bits.Checked = APMain.CoreSettings.Audio_TargetBitsPerSample == 8;
-            radioButton_16bit.Checked = APMain.CoreSettings.Audio_TargetBitsPerSample == 16;
-            radioButton_24bits.Checked = APMain.CoreSettings.Audio_TargetBitsPerSample == 24;
-            radioButton_32bits.Checked = APMain.CoreSettings.Audio_TargetBitsPerSample == 32;
-
-            radioButton_mono.Checked = APMain.CoreSettings.Audio_TargetAudioChannels == 1;
-            radioButton_stereo.Checked = APMain.CoreSettings.Audio_TargetAudioChannels == 2;
-
-            radioButton_freq_8000.Checked = APMain.CoreSettings.Audio_TargetFrequency == 8000;
-            radioButton_freq_11025.Checked = APMain.CoreSettings.Audio_TargetFrequency == 11025;
-            radioButton_freq_16000.Checked = APMain.CoreSettings.Audio_TargetFrequency == 16000;
-            radioButton_freq_22050.Checked = APMain.CoreSettings.Audio_TargetFrequency == 22050;
-            radioButton_32000hz.Checked = APMain.CoreSettings.Audio_TargetFrequency == 32000;
-            radioButton_freq_44100.Checked = APMain.CoreSettings.Audio_TargetFrequency == 44100;
-            radioButton_freq_48000.Checked = APMain.CoreSettings.Audio_TargetFrequency == 48000;
-            radioButton_freq_88200.Checked = APMain.CoreSettings.Audio_TargetFrequency == 88200;
-            radioButton_freq_96000.Checked = APMain.CoreSettings.Audio_TargetFrequency == 96000;
-
-            dbmeter.IsStereo = APMain.CoreSettings.Audio_TargetAudioChannels == 2;
-
-            radioButton_db_fix_on.Checked = APMain.CoreSettings.Audio_DB_Fix_Enabled;
-            radioButton1.Checked = !APMain.CoreSettings.Audio_DB_Fix_Enabled;
-
-            radioButton_wave_fix_off.Checked = APMain.CoreSettings.Audio_Wave_Fix_Mode == 0;
-            radioButton_wave_fix_shift.Checked = APMain.CoreSettings.Audio_Wave_Fix_Mode == 1;
-
             button_save_list.Enabled = files_browser.CanSaveList;
         }
         private void FillSourceInfo()
         {
-            label_bits.Text = "0 Bits";
-            label_channels.Text = "0 Channels";
-            label_freq.Text = "0 Hz";
             label_song_name.Text = "";
             if (APCore.CurrentMediaFormat != null)
             {
@@ -393,11 +312,8 @@ namespace APlayer
                     {
                         chann = APCore.CurrentMediaFormat.ChannelsNumber.ToString() + " Channels";
                     }
-                    label_channels.Text = chann;
-                    label_bits.Text = APCore.CurrentMediaFormat.BitsPerSample + " Bits";
-                    label_freq.Text = APCore.CurrentMediaFormat.Frequency + "Hz";
                     label_song_name.Text = Path.GetFileName(APCore.CurrentMediaFormat.CurrentFilePath);
-                    dbmeter.IsStereo = APCore.CurrentMediaFormat.ChannelsNumber == 2;
+                    toolTip1.SetToolTip(label_song_name, label_song_name.Text);
                 }
             }
         }
@@ -428,7 +344,7 @@ namespace APlayer
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
             OpenFileDialog op = new OpenFileDialog();
-            op.Title = "Open Media File";
+            op.Title = "Open Media File(s)";
             op.Filter = FormatsManager.GetFilter();
             op.Multiselect = true;
             if (op.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
@@ -440,7 +356,7 @@ namespace APlayer
             timer1.Start();
             mediaBar1.MediaDuration = APCore.CurrentMediaFormat.Length;
             label_time.Text = TimingFormatter.SecondsToTime(APCore.CurrentMediaFormat.Length, Program.AppSettings.TimeTextTimingFormat);
-            APCore.SetVolume(trackBar_volume.Value);
+            APCore.SetVolume(100);
 
             FillSourceInfo();
             double tg = 0;
@@ -448,8 +364,8 @@ namespace APlayer
             timer_meter.Interval = (int)(tg);
 
             UpdateSwitches();
-            if (APCore.TargetSettingsChanged)
-                ResetAudioRenderer();
+            // if (APCore.TargetSettingsChanged)
+            ResetAudioRenderer();
         }
         /*TIMERS*/
         // playback timer
@@ -484,13 +400,6 @@ namespace APlayer
         private void button_pause_Click(object sender, EventArgs e)
         {
             APCore.Pause();
-        }
-        private void trackBar_volume_Scroll(object sender, EventArgs e)
-        {
-            APCore.SetVolume(trackBar_volume.Value);
-
-            toolTip1.SetToolTip(trackBar_volume, "Volume = " + trackBar_volume.Value.ToString() + " %" + "\n(F11 Volume Up, F10 Volume Down)");
-            CheckMute();
         }
         private void MediaBar1_TimeChangeRequest(object sender, TimeChangeArgs e)
         {
@@ -724,11 +633,11 @@ namespace APlayer
         }
         private void helpToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            Process.Start("https://github.com/alaahadid/Agile-Player/wiki");
+            Process.Start("https://github.com/jegqamas/Agile-Player/wiki");
         }
         private void websiteOnlineRepositoryToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Process.Start("https://github.com/alaahadid/Agile-Player/");
+            Process.Start("https://github.com/jegqamas/Agile-Player/");
         }
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -854,7 +763,16 @@ namespace APlayer
         {
             SC_ShowSettings();
         }
-
+        private void button7_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog op = new OpenFileDialog();
+            op.Title = "Add Media File(s)";
+            op.Filter = FormatsManager.GetFilter();
+            op.Multiselect = true;
+            if (op.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
+                //  FormatsManager.LoadMediaFile(op.FileName);
+                files_browser.OpenFiles(op.FileNames, false, true);
+        }
         #region Shortcuts Method
         private void SC_PlayPause()
         {
@@ -883,25 +801,14 @@ namespace APlayer
         {
             button_toggle_mute_Click(this, null);
         }
-        private void SC_VolumeUp()
-        {
-            if (trackBar_volume.Value + 10 <= 100)
-                trackBar_volume.Value += 10;
-            else
-                trackBar_volume.Value = 100;
-            trackBar_volume_Scroll(this, null);
-        }
-        private void SC_VolumeDown()
-        {
-            if (trackBar_volume.Value - 10 >= 0)
-                trackBar_volume.Value -= 10;
-            else
-                trackBar_volume.Value = 0;
-            trackBar_volume_Scroll(this, null);
-        }
+
         private void SC_OpenFile()
         {
             openToolStripMenuItem_Click(this, null);
+        }
+        private void SC_AddFile()
+        {
+            button7_Click(this, null);
         }
         private void SC_OpenFolder()
         {
@@ -935,65 +842,6 @@ namespace APlayer
         {
             exitToolStripMenuItem_Click(this, null);
         }
-        private void SC_ToggleDBFix()
-        {
-            dBFixToolStripMenuItem_Click(this, null);
-        }
-        private void SC_ToggleWaveShift()
-        {
-            if (APMain.CoreSettings.Audio_Wave_Fix_Mode == 1)
-                APMain.CoreSettings.Audio_Wave_Fix_Mode = 0;
-            else
-                APMain.CoreSettings.Audio_Wave_Fix_Mode = 1;
-            UpdateSwitches();
-            ResetAudioRenderer();
-        }
-        private void SC_ToggleChannels()
-        {
-            if (APMain.CoreSettings.Audio_TargetAudioChannels == 2)
-                APMain.CoreSettings.Audio_TargetAudioChannels = 1;
-            else
-                APMain.CoreSettings.Audio_TargetAudioChannels = 2;
-            UpdateSwitches();
-            ResetAudioRenderer();
-        }
-        private void SC_ToggleBits()
-        {
-            if (APMain.CoreSettings.Audio_TargetBitsPerSample == 32)
-                APMain.CoreSettings.Audio_TargetBitsPerSample = 8;
-            else if (APMain.CoreSettings.Audio_TargetBitsPerSample == 8)
-                APMain.CoreSettings.Audio_TargetBitsPerSample = 16;
-            else if (APMain.CoreSettings.Audio_TargetBitsPerSample == 16)
-                APMain.CoreSettings.Audio_TargetBitsPerSample = 24;
-            else if (APMain.CoreSettings.Audio_TargetBitsPerSample == 24)
-                APMain.CoreSettings.Audio_TargetBitsPerSample = 32;
-
-            UpdateSwitches();
-            ResetAudioRenderer();
-        }
-        private void SC_ToggleFreq()
-        {
-            if (APMain.CoreSettings.Audio_TargetFrequency == 96000)
-                APMain.CoreSettings.Audio_TargetFrequency = 8000;
-            else if (APMain.CoreSettings.Audio_TargetFrequency == 8000)
-                APMain.CoreSettings.Audio_TargetFrequency = 11025;
-            else if (APMain.CoreSettings.Audio_TargetFrequency == 11025)
-                APMain.CoreSettings.Audio_TargetFrequency = 16000;
-            else if (APMain.CoreSettings.Audio_TargetFrequency == 16000)
-                APMain.CoreSettings.Audio_TargetFrequency = 22050;
-            else if (APMain.CoreSettings.Audio_TargetFrequency == 22050)
-                APMain.CoreSettings.Audio_TargetFrequency = 32000;
-            else if (APMain.CoreSettings.Audio_TargetFrequency == 32000)
-                APMain.CoreSettings.Audio_TargetFrequency = 44100;
-            else if (APMain.CoreSettings.Audio_TargetFrequency == 44100)
-                APMain.CoreSettings.Audio_TargetFrequency = 48000;
-            else if (APMain.CoreSettings.Audio_TargetFrequency == 48000)
-                APMain.CoreSettings.Audio_TargetFrequency = 88200;
-            else if (APMain.CoreSettings.Audio_TargetFrequency == 88200)
-                APMain.CoreSettings.Audio_TargetFrequency = 96000;
-            UpdateSwitches();
-            ResetAudioRenderer();
-        }
         private void SC_SelectAll()
         {
             files_browser.SelectAll();
@@ -1006,8 +854,11 @@ namespace APlayer
         {
             FormSettings frm = new FormSettings();
             frm.ShowDialog(this);
+
+            UpdateSwitches();
         }
         #endregion
 
-   }
+      
+    }
 }

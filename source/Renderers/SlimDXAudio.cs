@@ -2,7 +2,7 @@
 // An Audio player with downsampler, upsampler and bit-converter
 // written in C#.
 // 
-// Copyright © Alaa Ibrahim Hadid 2022
+// Copyright © Alaa Ibrahim Hadid 2022 - 2025
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
-// Author email: mailto:alaahadidfreeware@gmail.com
+// Author email: mailto:alahadid@gmail.com
 //
 using System;
 using System.Diagnostics;
@@ -71,6 +71,7 @@ namespace APlayer.Renderers
         private int buffer_playback_currentSample_r;
         private int buffer_freq;
         private double target_fps;
+        private double speed_offset;
         private int samples_added;
 
         System.IntPtr current_handle;
@@ -113,12 +114,21 @@ namespace APlayer.Renderers
 
             if (APMain.CoreSettings.Audio_TargetFrequency < 88200)
             {
-                BufferSize = APMain.CoreSettings.Audio_RenderBufferInKB * (bit_per_sample / 8) * 1024;
+                //  BufferSize = 16 * (bit_per_sample / 8) * 1024;
+                //  BufferSize += 452;//352, 412, 372, 460
+
+                // BufferSize = 15 * (bit_per_sample / 8) * 1024;
+                // BufferSize += 224;//352, 412, 372, 460
+
+                //BufferSize = 16 * (bit_per_sample / 8) * 1024;
+                //BufferSize += 160;//352, 412, 372, 460
+
+                BufferSize = (14 * (bit_per_sample / 8) * 1024);
             }
             else
             {
                 // We need more buffering in this case !!
-                BufferSize = APMain.CoreSettings.Audio_RenderBufferInKB * bit_per_sample * 1024;
+                BufferSize = 14 * bit_per_sample * 1024;
             }
 
             buffer_internal_r_pos = 0;
@@ -137,6 +147,8 @@ namespace APlayer.Renderers
             samples_period_max = samples_period_min * 12;
 
             Trace.WriteLine("DirectSound: BufferSize = " + BufferSize + " Byte");
+
+            speed_offset = 26.695;//26.7
             //Description
             SoundBufferDescription des = new SoundBufferDescription();
             des.Format = wav;
@@ -558,6 +570,10 @@ namespace APlayer.Renderers
             //cps_core_missle = 1.0 / ((target_fps / 4) + (target_fps * 2) + 2);//cps_core_missle = 1.0 / ((target_fps / 4) + (target_fps * 2));
             cps_core_missle = 1.0 / ((target_fps / 4) + (target_fps * 2) + 2);
             cps_pl_faster = 1.0 / (target_fps - (target_fps / 3));
+
+            // cps_core_missle = 1.0 / (target_fps + speed_offset);
+            // cps_pl_faster = 1.0 / (target_fps - speed_offset);
+
             cps_normal = 1.0 / target_fps;
 
             cps_core_extreme = 1.0 / 100;

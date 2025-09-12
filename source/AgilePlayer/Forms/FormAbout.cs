@@ -2,7 +2,7 @@
 // An Audio player with downsampler, upsampler and bit-converter
 // written in C#.
 // 
-// Copyright © Alaa Ibrahim Hadid 2022
+// Copyright © Alaa Ibrahim Hadid 2022 - 2025
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
-// Author email: mailto:alaahadidfreeware@gmail.com
+// Author email: mailto:alahadid@gmail.com
 //
 using System;
 using System.IO;
@@ -37,11 +37,6 @@ namespace APlayer
             // Set version info
             string ver_m = Assembly.LoadFile(Path.Combine(APMain.ApplicationFolder, "AgilePlayer.exe")).GetName().Version.ToString();
             label_version.Text = "Version " + ver_m;
-
-            if (File.Exists(Path.Combine(APMain.ApplicationFolder, "Copyright Notice.txt")))
-            {
-                richTextBox_copyright.Lines = File.ReadAllLines(Path.Combine(APMain.ApplicationFolder, "Copyright Notice.txt"));
-            }
         }
         // Close
         private void button1_Click(object sender, EventArgs e)
@@ -50,7 +45,7 @@ namespace APlayer
         }
         private void linkLabel3_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start("mailto:alaahadidfreeware@gmail.com");
+            Process.Start("mailto:alahadid@gmail.com");
         }
         private void linkLabel4_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {

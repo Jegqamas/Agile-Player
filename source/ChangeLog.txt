@@ -1,3 +1,13 @@
+Version 1.5.8264.23
+Built at 17 August 2022 00:00
+-------------------------------
 
+- Added ability to switch CPS (Clocks Per Seconds) and Buffer Size in the main window.
+- Added new shortcuts to switch CPS and Buffer Size.
 
-- Added ability to customize db meter with mouse-click.
+Notes:
+I have a theory that says that songs/tracks that recorded in Euro region uses machines that clock at speed of 50 cps (as same as 50 fps), the
+other ones that recorded in the US region clocks at 60 cps. So this where the cps switching ability comes in, simply cps can be switched to suit the audio
+that being played. 
+Buffer size effect quality, latency and performance. Compined with CPS settings, it should get better hearing experiens.
+CPS and Buffer Size can be set in the settings dialog as well, in case setting custom settings. 

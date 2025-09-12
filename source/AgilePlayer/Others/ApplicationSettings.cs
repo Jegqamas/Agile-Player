@@ -2,7 +2,7 @@
 // An Audio player with downsampler, upsampler and bit-converter
 // written in C#.
 // 
-// Copyright © Alaa Ibrahim Hadid 2022
+// Copyright © Alaa Ibrahim Hadid 2022 - 2025
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
-// Author email: mailto:alaahadidfreeware@gmail.com
+// Author email: mailto:alahadid@gmail.com
 //
 using System.Drawing;
 using APlayer.Core;
@@ -46,12 +46,10 @@ namespace APlayer
         public int MediaToolTipColor = Color.RoyalBlue.ToArgb();
         public int MediaToolTipTextColor = Color.White.ToArgb();
         public string MediaBarTimingFormat = "hh:mm:ss.i";
-        public string TimeTextTimingFormat = "hh:mm:ss.i";
+        public string TimeTextTimingFormat = "hh:mm:ss";
 
-        public bool DBMeterFromSource = true;// True: display db from source file settings, False: display db after processing audio (i.e. after applying playback target settings)
         public bool DBMeterShowTexts = true;
         public bool DBMeterShowLines = true;
-        public bool DBMeterShowSurrounding = false;
 
         public override void LoadSettings()
         {
@@ -65,6 +63,9 @@ namespace APlayer
 
                 if (TimeTextTimingFormat == "hh:mm:ss.iii")
                     TimeTextTimingFormat = "hh:mm:ss";
+
+                DBMeterShowLines = true;
+                DBMeterShowTexts = true;
 
                 App_Version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
             }

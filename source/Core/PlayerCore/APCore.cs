@@ -2,7 +2,7 @@
 // An Audio player with downsampler, upsampler and bit-converter
 // written in C#.
 // 
-// Copyright © Alaa Ibrahim Hadid 2022
+// Copyright © Alaa Ibrahim Hadid 2022 - 2025
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
-// Author email: mailto:alaahadidfreeware@gmail.com
+// Author email: mailto:alahadid@gmail.com
 //
 using System.Threading;
 using System.Diagnostics;
@@ -100,8 +100,8 @@ namespace APlayer.Core
 
             if (media_format.FileLoaded)
             {
-                SetTargetCPS(APMain.CoreSettings.CPS_TargetCPS);
-                if (APMain.CoreSettings.AutoSwitchTargetSettingsToMatchInput)
+                SetTargetCPS(56);//44.192, 44.194, 44.46 , 43.378 . (44100 / 1000 = 44.1)
+               /* if (APMain.CoreSettings.AutoSwitchTargetSettingsToMatchInput)
                 {
                     if (APMain.CoreSettings.Audio_TargetAudioChannels != media_format.ChannelsNumber)
                         TargetSettingsChanged = true;
@@ -114,7 +114,7 @@ namespace APlayer.Core
                     if (APMain.CoreSettings.Audio_TargetFrequency != media_format.Frequency)
                         TargetSettingsChanged = true;
                     APMain.CoreSettings.Audio_TargetFrequency = media_format.Frequency;
-                }
+                }*/
 
                 InitiailizePlayer();
 

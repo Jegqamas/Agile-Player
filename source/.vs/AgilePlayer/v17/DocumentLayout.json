@@ -1,0 +1,105 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "G:\\Programmiing\\Agile Player\\Agile-Player\\source\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{E5A23FFB-8424-46B0-9B69-BF95427C005C}|Renderers\\Renderers.csproj|g:\\programmiing\\agile player\\agile-player\\source\\renderers\\slimdxaudio.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E5A23FFB-8424-46B0-9B69-BF95427C005C}|Renderers\\Renderers.csproj|solutionrelative:renderers\\slimdxaudio.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BC289508-19B2-4BCC-92B5-798A0D8BE45D}|Core\\Core.csproj|g:\\programmiing\\agile player\\agile-player\\source\\core\\playercore\\apcore.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BC289508-19B2-4BCC-92B5-798A0D8BE45D}|Core\\Core.csproj|solutionrelative:core\\playercore\\apcore.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BC289508-19B2-4BCC-92B5-798A0D8BE45D}|Core\\Core.csproj|g:\\programmiing\\agile player\\agile-player\\source\\core\\apmain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BC289508-19B2-4BCC-92B5-798A0D8BE45D}|Core\\Core.csproj|solutionrelative:core\\apmain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BC289508-19B2-4BCC-92B5-798A0D8BE45D}|Core\\Core.csproj|g:\\programmiing\\agile player\\agile-player\\source\\core\\playercore\\apcore.clocks.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BC289508-19B2-4BCC-92B5-798A0D8BE45D}|Core\\Core.csproj|solutionrelative:core\\playercore\\apcore.clocks.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BC289508-19B2-4BCC-92B5-798A0D8BE45D}|Core\\Core.csproj|g:\\programmiing\\agile player\\agile-player\\source\\core\\playercore\\apcore.player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BC289508-19B2-4BCC-92B5-798A0D8BE45D}|Core\\Core.csproj|solutionrelative:core\\playercore\\apcore.player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "SlimDXAudio.cs",
+              "DocumentMoniker": "G:\\Programmiing\\Agile Player\\Agile-Player\\source\\Renderers\\SlimDXAudio.cs",
+              "RelativeDocumentMoniker": "Renderers\\SlimDXAudio.cs",
+              "ToolTip": "G:\\Programmiing\\Agile Player\\Agile-Player\\source\\Renderers\\SlimDXAudio.cs",
+              "RelativeToolTip": "Renderers\\SlimDXAudio.cs",
+              "ViewState": "AgIAAFoAAAAAAAAAAAAAAIIAAAAfAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-07T19:00:30.659Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "APCore.Clocks.cs",
+              "DocumentMoniker": "G:\\Programmiing\\Agile Player\\Agile-Player\\source\\Core\\PlayerCore\\APCore.Clocks.cs",
+              "RelativeDocumentMoniker": "Core\\PlayerCore\\APCore.Clocks.cs",
+              "ToolTip": "G:\\Programmiing\\Agile Player\\Agile-Player\\source\\Core\\PlayerCore\\APCore.Clocks.cs",
+              "RelativeToolTip": "Core\\PlayerCore\\APCore.Clocks.cs",
+              "ViewState": "AgIAAK4AAAAAAAAAAAAAAMYAAAAjAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-07T19:00:02.524Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "APCore.cs",
+              "DocumentMoniker": "G:\\Programmiing\\Agile Player\\Agile-Player\\source\\Core\\PlayerCore\\APCore.cs",
+              "RelativeDocumentMoniker": "Core\\PlayerCore\\APCore.cs",
+              "ToolTip": "G:\\Programmiing\\Agile Player\\Agile-Player\\source\\Core\\PlayerCore\\APCore.cs",
+              "RelativeToolTip": "Core\\PlayerCore\\APCore.cs",
+              "ViewState": "AgIAAEgAAAAAAAAAAAAmwGYAAAAfAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-07T19:00:01.757Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "APCore.Player.cs",
+              "DocumentMoniker": "G:\\Programmiing\\Agile Player\\Agile-Player\\source\\Core\\PlayerCore\\APCore.Player.cs",
+              "RelativeDocumentMoniker": "Core\\PlayerCore\\APCore.Player.cs",
+              "ToolTip": "G:\\Programmiing\\Agile Player\\Agile-Player\\source\\Core\\PlayerCore\\APCore.Player.cs",
+              "RelativeToolTip": "Core\\PlayerCore\\APCore.Player.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-07T19:00:00.925Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "APMain.cs",
+              "DocumentMoniker": "G:\\Programmiing\\Agile Player\\Agile-Player\\source\\Core\\APMain.cs",
+              "RelativeDocumentMoniker": "Core\\APMain.cs",
+              "ToolTip": "G:\\Programmiing\\Agile Player\\Agile-Player\\source\\Core\\APMain.cs",
+              "RelativeToolTip": "Core\\APMain.cs",
+              "ViewState": "AgIAAGEAAAAAAAAAAAAmwH8AAAAiAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-07T18:59:56.978Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

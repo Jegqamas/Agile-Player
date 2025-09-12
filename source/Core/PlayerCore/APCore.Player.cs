@@ -2,7 +2,7 @@
 // An Audio player with downsampler, upsampler and bit-converter
 // written in C#.
 // 
-// Copyright © Alaa Ibrahim Hadid 2022
+// Copyright © Alaa Ibrahim Hadid 2022 - 2025
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
-// Author email: mailto:alaahadidfreeware@gmail.com
+// Author email: mailto:alahadid@gmail.com
 //
 using System;
 
@@ -36,6 +36,7 @@ namespace APlayer.Core
         private static int audio_wav_fix_mode;
         private static IMediaFormat media_format;
         public static SamplingMode audio_sampling_mode;
+        public static FrequencyPoint[] Frequencies;
 
         private static double audio_bp_samples_needed;
         private static double audio_bp_samples_required;
@@ -61,9 +62,9 @@ namespace APlayer.Core
         private static int[] audio_y;
         private static double volume;
 
-        public static int[] audio_last_source_sample;
-        public static int[] audio_last_target_sample;
         private static bool audio_use_db_fix;
+
+        private static bool audio_zero_it;
 
         public static event EventHandler<EventArgs> EndOfSourceReached;
 
@@ -112,10 +113,27 @@ namespace APlayer.Core
             audio_t = new int[audio_channels_number];
             audio_x = new int[audio_channels_number];
             audio_y = new int[audio_channels_number];
-            audio_last_source_sample = new int[audio_channels_number];
-            audio_last_target_sample = new int[audio_channels_number];
             audio_w_pos = 0;
             audio_samples_added = 0;
+
+            for (int i = 0; i < Frequencies.Length; i++)
+            {
+                Frequencies[i].Ratio = (double)media_format.Frequency / Frequencies[i].Frequency;
+                Frequencies[i].Timer = 0;
+            }
+        }
+        public static void SetFrequencyPoints(double[] frequencies)
+        {
+            Frequencies = new FrequencyPoint[frequencies.Length];
+
+            for (int i = 0; i < frequencies.Length; i++)
+            {
+                Frequencies[i] = new FrequencyPoint();
+                Frequencies[i].Frequency = frequencies[i];
+
+                Frequencies[i].Ratio = 44100 / frequencies[i];
+                Frequencies[i].Timer = 0;
+            }
         }
         private static void ApplyWaveFixAndVolume(ref int[] sample_in, out int[] sample_out)
         {
@@ -588,17 +606,17 @@ namespace APlayer.Core
                 ApplyWaveFixAndVolume(ref audio_t, out audio_x);
 
                 // Update the last source sample
-                for (int i = 0; i < audio_channels_number; i++)
-                {
-                    if (audio_x[i] > audio_last_source_sample[i])
-                        audio_last_source_sample[i] = audio_x[i];
-                    else
-                    {
-                        if (audio_last_source_sample[i] > 0)
-                            audio_last_source_sample[i]--;
-                    }
+                /* for (int i = 0; i < audio_channels_number; i++)
+                 {
+                     if (audio_x[i] > audio_last_source_sample[i])
+                         audio_last_source_sample[i] = audio_x[i];
+                     else
+                     {
+                         if (audio_last_source_sample[i] > 0)
+                             audio_last_source_sample[i]--;
+                     }
 
-                }
+                 }*/
 
                 if (audio_bp_bits_per_sample_converting_needed)
                 {
@@ -662,18 +680,6 @@ namespace APlayer.Core
                                                     audio_samples[audio_w_pos][j] = 1;
                                             }
                                         }
-
-                                        // audio_last_target_sample_av[i] += (int)(audio_x[i] * volume);
-
-                                        if (audio_samples[audio_w_pos][i] > audio_last_target_sample[i])
-                                            audio_last_target_sample[i] = audio_samples[audio_w_pos][i];
-                                        else if (audio_target_bit_per_sample > 8)
-                                        {
-                                            if (audio_last_target_sample[i] > 0)
-                                                audio_last_target_sample[i]--;
-                                            else if (audio_last_target_sample[i] < 0)
-                                                audio_last_target_sample[i]++;
-                                        }
                                     }
 
                                     audio_w_pos++;
@@ -683,11 +689,7 @@ namespace APlayer.Core
                             }
                             else
                             {
-                                for (int i = 0; i < audio_channels_number; i++)
-                                {
-                                    audio_last_target_sample[i] = audio_y[i];
-                                }
-                                audio_recorder.AddSample(audio_last_target_sample[0], audio_last_target_sample[1 % audio_channels_number]);
+                                audio_recorder.AddSample(audio_y[0], audio_y[1 % audio_channels_number]);
                             }
 
                             break;
@@ -729,16 +731,6 @@ namespace APlayer.Core
                                                         audio_samples[audio_w_pos][j] = 1;
                                                 }
                                             }
-
-                                            if (audio_samples[audio_w_pos][i] > audio_last_target_sample[i])
-                                                audio_last_target_sample[i] = audio_samples[audio_w_pos][i];
-                                            else if (audio_target_bit_per_sample > 8)
-                                            {
-                                                if (audio_last_target_sample[i] > 0)
-                                                    audio_last_target_sample[i]--;
-                                                else if (audio_last_target_sample[i] < 0)
-                                                    audio_last_target_sample[i]++;
-                                            }
                                         }
 
                                         audio_w_pos++;
@@ -748,11 +740,7 @@ namespace APlayer.Core
                                 }
                                 else
                                 {
-                                    for (int i = 0; i < audio_channels_number; i++)
-                                    {
-                                        audio_last_target_sample[i] = audio_y[i];
-                                    }
-                                    audio_recorder.AddSample(audio_last_target_sample[0], audio_last_target_sample[1 % audio_channels_number]);
+                                    audio_recorder.AddSample(audio_y[0], audio_y[1 % audio_channels_number]);
                                 }
                             }
 
@@ -784,18 +772,7 @@ namespace APlayer.Core
                                                         audio_samples[audio_w_pos][j] = 1;
                                                 }
                                             }
-
-                                            if (audio_samples[audio_w_pos][i] > audio_last_target_sample[i])
-                                                audio_last_target_sample[i] = audio_samples[audio_w_pos][i];
-                                            else if (audio_target_bit_per_sample > 8)
-                                            {
-                                                if (audio_last_target_sample[i] > 0)
-                                                    audio_last_target_sample[i]--;
-                                                else if (audio_last_target_sample[i] < 0)
-                                                    audio_last_target_sample[i]++;
-                                            }
                                         }
-
                                         audio_w_pos++;
                                         audio_samples_added++;
                                         audio_bytes_processed_for_target += audio_trg_bytes_per_sample;
@@ -804,11 +781,7 @@ namespace APlayer.Core
                                 }
                                 else
                                 {
-                                    for (int i = 0; i < audio_channels_number; i++)
-                                    {
-                                        audio_last_target_sample[i] = audio_y[i];
-                                    }
-                                    audio_recorder.AddSample(audio_last_target_sample[0], audio_last_target_sample[1 % audio_channels_number]);
+                                    audio_recorder.AddSample(audio_y[0], audio_y[1 % audio_channels_number]);
                                 }
                             }
 
@@ -816,9 +789,54 @@ namespace APlayer.Core
                             break;
                         }
                 }
+
+                // Clock frequencies for specturn analyser
+                for (int i = 0; i < Frequencies.Length; i++)
+                {
+                    Frequencies[i].Timer++;
+
+                    // Frequency clock
+                    if (Frequencies[i].Timer >= Frequencies[i].Ratio)
+                    {
+                        Frequencies[i].Timer -= Frequencies[i].Ratio;
+                        //Frequencies[i].Clocks++;
+
+                        //Frequencies[i].LeftAv += audio_y[0] > 0 ? audio_y[0] : -audio_y[0];
+                        // Frequencies[i].RightAv += audio_y[1 % audio_channels_number] > 0 ? audio_y[1 % audio_channels_number] : -audio_y[1 % audio_channels_number];
+
+                        /* Frequencies[i].LeftAv = audio_y[0] > 0 ? audio_y[0] : -audio_y[0];
+                         Frequencies[i].RightAv = audio_y[1 % audio_channels_number] > 0 ? audio_y[1 % audio_channels_number] : -audio_y[1 % audio_channels_number];
+
+                         if (Frequencies[i].LeftAv > Frequencies[i].LeftSample)
+                             Frequencies[i].LeftSample = Frequencies[i].LeftAv;
+
+                         if (Frequencies[i].RightAv > Frequencies[i].RightSample)
+                             Frequencies[i].RightSample = Frequencies[i].RightAv;*/
+
+                        Frequencies[i].LeftSample = audio_y[0];
+                        Frequencies[i].RightSample = audio_y[1 % audio_channels_number];
+                    }
+                }
             }
         }
+        public static void UpdateFrequencyPoints()
+        {
+            for (int i = 0; i < Frequencies.Length; i++)
+            {
+                /*if (Frequencies[i].Clocks > 0)
+                {
+                    Frequencies[i].LeftSample = Frequencies[i].LeftAv / Frequencies[i].Clocks;
+                    Frequencies[i].RightSample = Frequencies[i].RightAv / Frequencies[i].Clocks;
+                    Frequencies[i].LeftAv = Frequencies[i].RightAv = Frequencies[i].Clocks = 0;
+                }
+                else
+                {
+                    Frequencies[i].LeftSample = Frequencies[i].RightSample = 0;
+                }*/
 
+                // Frequencies[i].LeftSample = Frequencies[i].RightSample = 0;
+            }
+        }
         public static void Pause()
         {
             PAUSED = true;

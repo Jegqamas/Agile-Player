@@ -120,19 +120,4 @@
   <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
-  <data name="trackBar_cps.ToolTip" xml:space="preserve">
-    <value>Clocks per seconds, on each clock, the engine update the buffers.
-
-Lower the value means the engine will take more time to clock and update the buffer,
-this should increase performance since the engine should update on each 1000 / cps_val milliseconds.
-
-Higher the value means the engine will update buffer faster and much time each second,
-this will affect performance but ensure high quality accuracy of buffer updating.
-
-Example of high: Each 1000 / 64 = 15,625 milliseconds the engine should update buffer.
-
-Example of normal: Each 1000 / 52 = 19,230 milliseconds the engine should update buffer.
-
-Example of low: Each 1000 / 26 = 38,461 milliseconds the engine should update buffer.</value>
-  </data>
 </root>
