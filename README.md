@@ -3,11 +3,11 @@ An Audio player with downsampler, upsampler and bit-converter written in C#.
 
 ![snap1](/snap.png?raw=true "Snapshot1")
 
-The media files are listed in this snap is free to download and listen (licensed under the Creative Common License) from [here](https://www.soundclick.com/artist/default.cfm?bandID=1498286&albumID=30799&content=albumInfo).
+The media files are listed in this snap is free to download and listen (licensed under the Creative Common License) from [here](https://www.soundclick.com/AlaaHadid/?albumid=43336&content=albuminfo).
 
 **Please note that this is the official repository of the program, that means official updates on source and releases will be commited/published here.**
 
-### [DOWNLOAD LATEST RELEASE (VERSION)](https://github.com/alaahadid/Agile-Player/releases)
+### [DOWNLOAD LATEST RELEASE (VERSION)](https://github.com/jegqamas/Agile-Player/releases)
 
 ## Introduction
 Agile Player is An Audio player with downsampler, upsampler and bit-converter written in C#.
