@@ -21,7 +21,7 @@ Agile Player render audio in new unique way, making sure that:
 2. When it is neccessary , do downsampling/upsampling and/or bits-converting accuretly during play time.
 3. Very simple GUI, just open audio files/folders and ready to go.
 
-Agile Player is based on My Nes emulater (see <https://github.com/alaahadid/My-Nes>), the idea is to build
+Agile Player is based on My Nes emulater (see <https://github.com/jegqamas/My-Nes>), the idea is to build
 an audio player based on emulation way. i.e. it does like an emulator which emulates a machine, 
 Agile Player load audio file, then clock like real machine: process samples on clocks based way, intervals in time, 
 not just simply copy-paste buffers into a renderer.
@@ -48,17 +48,13 @@ This will deliver accuracy with timing, a specific sample plays at the time when
 - Accurate play timing, a specific sample is played at the time where it supposed to.
 - Automatic upsampling and downsampling. Can play in any desigred frequency regaldess of the source frequency, the engine take care of downsampling/upsampling if it is needed.
 - Automatic bit per sample converting, can switch desired bit-per-sample regadless of the source bit-per-sample, the engine take care of converting bit-per-sampling if needed. All using correct equations.
-- DB Fix feature, enables a simple fix for songs/tracks 0 samples by replacing each sample with input 0 with input of 1 bit which is 1. It will be 0 db instead of infinity db. This is correct.
-- Wave Shift feature, shift audio wave to make sure all samples above 0. Enabling this with DB Fix will make sure that the song/track is 100% correct in physics.
 - Ability to record wav, save wav file of current played media with target settings (Channels, Frequency, Bits Per Sample, DB Fix and Wave Shift).
 - Currently supported media formats (playback): 
 
 1. Loseless WAV PCM, (8 bit, 16 bit, 24 bit and 32 bit). 
 2. MP3 (16 bits only, still issues with it but works).
 
-Note: Both DB Fix and Wave Shift features are developed based on information can be found here: <https://github.com/alaahadid/Docs/blob/main/Audio%20And%20DB.txt>
 
-They are turned off by default.
 
 ## System Requirements
 Usually Agile Player comes in portable package, which can be installed simply by extracting the content of that package 
@@ -80,12 +76,7 @@ NOTES:
 - Auto switch playback settings (Frequency, Channels Number and Bits Per Sample) when opening a media
   to match that media specifications allows to automatically change target playback settings to match opened media,
   it might be usefull to prevent Upsampling/Downsampling/Bit-Converting each time a media is opened.
-- Copy file data into RAM fixes issue when opening media file and something happen to slow reading proccess (i.e. heave load on hdd), this was causing problems with playback. 
-  Agile Player copys all media file data (after converting into pcm) into memory, it might be huge data (i.e. > 500 MB) depending on media length, but since Agile Player is designed
-  to work on pc, and modern pcs can handle such memory space (huge RAM), also hdd, ssd ..etc are fast to do so so there should be no problem. 
-  Using Agile Player to play media from disc (i.e. cd, dvd, bluray) might not be a good idea when using huge media file, because of opening media in this case may take long time. 
-  For mp3 there is no problem since mp3 files are small.
-- Agile Player records to wave file with these settings: Channels Number, Frequency, Bits Per Sample, DB Fix and Wave Shift.
+- Agile Player records to wave file with these settings: Channels Number, Frequency and Bits Per Sample
 - When record, the application stops and freeze, it can take minutes before it done the recording, it may take a long time,
 that depends on the input size, also on target settings. After the records finishes, the application will open the folder where
 the recorded file is saved.
@@ -93,19 +84,6 @@ the recorded file is saved.
 - When dragging-droping files into the list, the list will be cleard first. 
   To add files into the list without clearing it, simply hold Left-Shift while dragging-droping files.
 - To delete selected files from the list, simply press Delete from keyboard.
-- How to switch renderer ?
-
-1. Please go to documents folder `C:\Users\<user>\OneDrive\Documents\AgilePlayer`, `<user>` is the user name.
-2. Open file `coresettings.ini` (or make new file with that name if it does not exist)
-3. Find line `Audio_RendererID=` (or add it) then 
-
-Set to `Audio_RendererID=slimdx.directsound` for **SlimDX DirectSound** renderer.
-
-Set to `Audio_RendererID=sdl2.audio` for **SDL2 Audio** renderer.
-
-**SlimDX DirectSound** renderer is stable.
-
-See also [Settings File (i.e. Switching Renderer, Modify Performance Settings)](https://github.com/alaahadid/Agile-Player/wiki/Settings-File-(i.e.-Switching-Renderer,-Modify-Performance-Settings))
 
 TROUBLES SHOOTING:
 ------------------
